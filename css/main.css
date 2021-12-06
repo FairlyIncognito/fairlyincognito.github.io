@@ -23,11 +23,18 @@ div {
     align-items: center;
 }
 
-div h1 {
+h1 {
+    font-size: 4rem;
+}
+
+h2 {
+    font-size: 3rem;
+}
+
+div h1, div h2 {
     color: red;
     font-family: 'Mountains of Christmas', cursive;
     font-weight: bold;
-    font-size: 5rem;
     text-shadow: 2px 2px black;
 }
 
