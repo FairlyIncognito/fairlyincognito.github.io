@@ -1,4 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&display=swap');
 
+* {
+    margin:0;
+    padding:0;
+}
 
 html, body {
     height: 100%;
@@ -16,6 +21,14 @@ div {
     flex-flow: row wrap;
     justify-content: center;
     align-items: center;
+}
+
+div h1 {
+    color: red;
+    font-family: 'Mountains of Christmas', cursive;
+    font-weight: bold;
+    font-size: 5rem;
+    text-shadow: 2px 2px black;
 }
 
 div a {
