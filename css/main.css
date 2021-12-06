@@ -1,0 +1,60 @@
+
+
+html, body {
+    height: 100%;
+}
+
+body {
+    background-image: url("/img/307348.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: left top;
+}
+
+div {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+div a {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: auto;
+    padding: 1rem;
+    border: 1px solid darkslategray;
+    height: 12rem;
+    width: 10rem;
+    margin: 1rem;
+    overflow: hidden;
+    color: black;
+    text-decoration: none;
+    border-radius: 5px;
+    background: ghostwhite;
+    
+}
+
+div a:hover {
+    color: red;
+    border: 1px solid red;
+}
+
+div a p {
+    margin: 0;
+    padding: .5rem 0 0 0;
+}
+
+div a img {
+    max-height: 10rem;
+    width: auto;
+}
+
+#snow {
+    position:relative;
+    width:100%;
+    height:100%;
+  }
