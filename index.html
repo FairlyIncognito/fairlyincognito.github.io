@@ -1,13 +1,255 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/main.css">
-    <title>FairlyIncognito</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mickey | Portfolio</title>
+  <meta name="description" content="Portfolio and playground for code + hobby dev/AI projects." />
 </head>
 <body>
-    
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="logo" aria-hidden>MI</div>
+        <span>Mickey — Portfolio</span>
+      </div>
+      <nav aria-label="Primary">
+        <ul>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><button class="btn" id="themeToggle" aria-pressed="true" title="Toggle theme">🌗</button></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Hi, I'm Mickey.<br/> I build practical web tools and hobby AI/dev projects.</h1>
+      <p>Laravel • PHP 8+ • JavaScript • jQuery • Bootstrap 5 • Tinker-first, ship-fast.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="https://github.com/" target="_blank" rel="noreferrer noopener">GitHub</a>
+        <a class="btn" href="#projects">Latest Projects</a>
+        <!-- TODO: point this to your CV if you want -->
+        <a class="btn" href="#" onclick="alert('Hook this up to your CV file, senpai ✨'); return false;">Download CV</a>
+      </div>
+    </section>
+
+    <section id="projects" aria-labelledby="projects-title">
+      <h2 id="projects-title">Projects</h2>
+      <div class="panel">
+        <div class="filters">
+          <input id="search" class="search" type="search" placeholder="Search by title, description, or tag…" aria-label="Search projects" />
+          <div class="filters-row" role="toolbar" aria-label="Tag filters">
+            <!-- Tag chips: JS will generate and control aria-pressed state -->
+            <button class="chip" data-tag="All" aria-pressed="true">All</button>
+            <button class="chip" data-tag="Web">Web</button>
+            <button class="chip" data-tag="Laravel">Laravel</button>
+            <button class="chip" data-tag="AI">AI</button>
+            <button class="chip" data-tag="Game">Game</button>
+            <button class="chip" data-tag="Tool">Tool</button>
+          </div>
+        </div>
+        <div id="projectGrid" class="grid" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section id="about" class="about" aria-labelledby="about-title">
+      <h2 id="about-title">About</h2>
+      <div class="panel">
+        <p>
+          I’m a full‑stack web developer focused on building clean, reliable tools. My day job is a time registration app where I’m the solo dev (Laravel 10+, PHP 8+, a sprinkle of JS/jQuery/Bootstrap 5). By night I noodle on small AI experiments, utilities, and the occasional game jam idea.
+        </p>
+        <p>
+          I like pragmatic solutions, small iterations, and shipping real things. If you’re into the same vibe, let’s talk.
+        </p>
+      </div>
+    </section>
+
+    <section id="contact" aria-labelledby="contact-title">
+      <h2 id="contact-title">Contact</h2>
+      <div class="panel">
+        <div class="contact-list">
+          <div>
+            <strong>Email:</strong>
+            <span class="mono" id="emailText">mickey@example.com</span>
+            <button class="btn" id="copyEmail">Copy</button>
+          </div>
+          <div>
+            <strong>Links:</strong>
+            <a class="btn" href="https://github.com/" target="_blank" rel="noreferrer noopener">GitHub</a>
+            <a class="btn" href="https://www.linkedin.com/" target="_blank" rel="noreferrer noopener">LinkedIn</a>
+            <a class="btn" href="https://x.com/" target="_blank" rel="noreferrer noopener">X</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>© <span id="year"></span> Mickey. Built with plain HTML/CSS/JS. No frameworks, no fluff.</p>
+    </footer>
+  </main>
+
+  <script>
+    // =========================
+    // Data: add/edit your projects here
+    // =========================
+    const PROJECTS = [
+      {
+        title: "Timesheet Wrangler",
+        desc: "Internal tool for cleaning/approving timesheets. Data-first UI with bulk actions.",
+        tags: ["Web", "Laravel", "Tool"],
+        code: "https://github.com/your-user/timesheet-wrangler",
+        live: "",
+      },
+      {
+        title: "Tiny Chatbot",
+        desc: "Promptable AI microservice with role presets and logging.",
+        tags: ["AI", "Web", "Tool"],
+        code: "https://github.com/your-user/tiny-chatbot",
+        live: "https://your-domain.com/tiny-chatbot",
+      },
+      {
+        title: "SpriteBound",
+        desc: "Minimal JS game prototype — top‑down rooms, simple upgrades, mod‑friendly JSON.",
+        tags: ["Game", "Web"],
+        code: "https://github.com/your-user/spritebound",
+        live: "",
+      },
+      {
+        title: "Log Scribe",
+        desc: "Laravel package: opinionated activity log with JSON diff and broadcast hooks.",
+        tags: ["Laravel", "Tool", "Web"],
+        code: "https://github.com/your-user/log-scribe",
+        live: "",
+      },
+      {
+        title: "Prompt Runner",
+        desc: "Batch evaluate prompts locally; export runs as CSV. No cloud, no fuss.",
+        tags: ["AI", "Tool"],
+        code: "https://github.com/your-user/prompt-runner",
+        live: "",
+      },
+      {
+        title: "Sheet to API",
+        desc: "Turn a Google Sheet into a read‑only JSON API with caching.",
+        tags: ["Web", "Tool"],
+        code: "https://github.com/your-user/sheet-to-api",
+        live: "https://your-domain.com/sheet-to-api",
+      },
+    ];
+
+    // =========================
+    // DOM helpers
+    // =========================
+    const $ = (sel, ctx=document) => ctx.querySelector(sel);
+    const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
+
+    // Theme toggle with localStorage
+    const themeToggle = () => {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      $('#themeToggle').setAttribute('aria-pressed', String(next === 'dark'));
+    };
+
+    // Render a single project card
+    function projectCard(p) {
+      const tagHTML = p.tags.map(t => `<span class="tag">#${t}</span>`).join('');
+      const codeBtn = p.code ? `<a class="btn" href="${p.code}" target="_blank" rel="noreferrer noopener">Code</a>` : '';
+      const liveBtn = p.live ? `<a class="btn" href="${p.live}" target="_blank" rel="noreferrer noopener">Live</a>` : '';
+      return `
+        <article class="card reveal" data-tags="${p.tags.join(',')}" data-title="${p.title.toLowerCase()}" data-desc="${p.desc.toLowerCase()}">
+          <div class="thumb" aria-hidden>PREVIEW</div>
+          <div class="card-body">
+            <h3>${p.title}</h3>
+            <p>${p.desc}</p>
+            <div class="tagbar">${tagHTML}</div>
+            <div class="card-actions">${codeBtn}${liveBtn}</div>
+          </div>
+        </article>`;
+    }
+
+    // Render all projects
+    function renderProjects(list) {
+      const grid = $('#projectGrid');
+      grid.innerHTML = list.map(projectCard).join('');
+      // trigger reveals on freshly rendered nodes
+      observeReveals();
+    }
+
+    // Search + tag filtering
+    let activeTag = 'All';
+
+    function applyFilters() {
+      const q = ($('#search').value || '').trim().toLowerCase();
+      const cards = $$('#projectGrid .card');
+      for (const el of cards) {
+        const tags = el.getAttribute('data-tags') || '';
+        const title = el.getAttribute('data-title') || '';
+        const desc = el.getAttribute('data-desc') || '';
+        const tagOk = activeTag === 'All' || tags.split(',').includes(activeTag);
+        const textOk = !q || title.includes(q) || desc.includes(q) || tags.toLowerCase().includes(q);
+        el.style.display = tagOk && textOk ? '' : 'none';
+      }
+    }
+
+    function setupFilters() {
+      $('#search').addEventListener('input', applyFilters);
+      $$('.chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          activeTag = chip.dataset.tag;
+          $$('.chip').forEach(c => c.setAttribute('aria-pressed', 'false'));
+          chip.setAttribute('aria-pressed', 'true');
+          applyFilters();
+        });
+      });
+    }
+
+    // Copy email helper
+    function setupCopy() {
+      $('#copyEmail').addEventListener('click', async () => {
+        const email = $('#emailText').textContent.trim();
+        try { await navigator.clipboard.writeText(email); alert('Email copied to clipboard!'); }
+        catch { prompt('Copy email:', email); }
+      });
+    }
+
+    // Card reveal on scroll
+    let revealObserver;
+    function observeReveals() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      if (revealObserver) { revealObserver.disconnect(); }
+      revealObserver = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add('in');
+            revealObserver.unobserve(e.target);
+          }
+        }
+      }, { threshold: 0.08 });
+      $$('.reveal').forEach(el => revealObserver.observe(el));
+    }
+
+    // Init
+    (function init() {
+      // Year
+      $('#year').textContent = new Date().getFullYear();
+
+      // Theme from storage
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+      $('#themeToggle').addEventListener('click', themeToggle);
+      $('#themeToggle').setAttribute('aria-pressed', String((localStorage.getItem('theme') || 'dark') === 'dark'));
+
+      // Render & wire up
+      renderProjects(PROJECTS);
+      setupFilters();
+      setupCopy();
+    })();
+  </script>
 </body>
 </html>
